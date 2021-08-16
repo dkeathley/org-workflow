@@ -104,7 +104,7 @@ With prefix arg move subtree to the start of its parent."
 ;; 	)
 ;;   )
 
-(defun org-workflow-new-item ()
+(defun org-workflow-new-project ()
   "Fill out a new subtree item with default categories."
   (interactive)
   (let (title)
@@ -118,9 +118,6 @@ With prefix arg move subtree to the start of its parent."
 	(insert title)
 
 	(org-insert-subheading nil)
-	(insert "Purpose")
-
-	(org-insert-heading nil)
 	(insert "Notebook")
 
 	(org-insert-heading nil)
