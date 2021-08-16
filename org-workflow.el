@@ -91,19 +91,6 @@ With prefix arg move subtree to the start of its parent."
 	)
   )
 
-;;Still a work in progress!
-;; (setq org-workflow-paper-dir "~/Dropbox (MIT)/")
-;; (defun org-workflow-new-paper-item ()
-;;   "Prompt user to enter a file name, with completion and history support."
-;;   (interactive)
-;;   (let (filename)
-;; 	(setq filename (read-file-name "Enter file name:"))
-;; 	(setq dirname "/home/dkeathley/JOURNAL-PAPERS/")
-;; 	(make-directory dirname)
-;; 	(rename-file filename dirname)
-;; 	)
-;;   )
-
 (defun org-workflow-new-project ()
   "Fill out a new subtree item with default categories."
   (interactive)
@@ -117,6 +104,16 @@ With prefix arg move subtree to the start of its parent."
 	(org-insert-subheading nil)
 	(insert title)
 
+	;;Create an id for the project
+	(setq item-id (org-id-get-create))
+	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
+
+	;;Set the attachment directory based on the ID
+	(org-set-property "DIR" project-folder-name)
+
+	;;Move point to end of the properties drawer
+	(search-forward-regexp ":END:")
+	
 	(org-insert-subheading nil)
 	(insert "Notebook")
 
@@ -140,7 +137,20 @@ With prefix arg move subtree to the start of its parent."
 	(org-insert-subheading nil)
 	(insert title)
 
+	;;Create an id for the project
+	(setq item-id (org-id-get-create))
+	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
+
+	;;Set the attachment directory based on the ID
+	(org-set-property "DIR" project-folder-name)
+
+	;;Move point to end of the properties drawer
+	(search-forward-regexp ":END:")
+
 	;;Variable to track the number of items looped through
+	;; -- this is b/c you need to differentiate between the
+	;; -- first item as a subheading, and the next items as
+	;; -- headings.  
 	(setq item-num 0)
 	
 	;;Loop through all subtitles provided to construct
@@ -163,48 +173,6 @@ With prefix arg move subtree to the start of its parent."
 	  )
 	)
   )
-
-(defun org-workflow-template-builder-folder (subtitle-list)
-  "Creates title from user input for a custom template. It is assumed
-   that the user provides a list of subtitles in subtitle-list.  A 
-   project folder is created with a link."
-  
-  (interactive)
-  (let (title item-id project-folder-name)
-
-	;;Get title string from user
-	(setq title (read-string "Enter Title: "))
-
-	;;Insert the title
-	(org-end-of-line) ;;ensure at end of line
-	(org-insert-subheading nil)
-	(insert title)
-
-	;;Create an id if necessary and store it
-	;;into item-id
-	(setq item-id (org-id-get-create))
-	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
-	(make-directory project-folder-name t)
-
-	;;Move point to end of the properties drawer
-	(search-forward-regexp ":END:")
-
-	;;Now insert the subheading link for the attachments folder
-	(org-insert-subheading nil)
-	(insert (concat "[[file:" project-folder-name "][ATTACHMENTS]]"))
-	
-	;;Loop through all subtitles provided to construct
-	;;the subtree:
-	(dolist (subtitle subtitle-list)
-	  (progn
-		;;Insert heading after that to stay in same level
-		(org-insert-heading nil)
-		(insert subtitle)
-		)
-	  )
-	)
-  )
-  
 
 
 (provide 'org-workflow)
