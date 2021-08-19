@@ -1,3 +1,5 @@
+* Description
+
 This elisp script provides a series of macros that are helpful for managing workflows in Emacs org-mode.  A common use case in org-mode is to create a series of headings that represent steps in a process, what we call a "workflow".  For instance, for writing journal articles there might be the following stages:
 
  1. Idea
