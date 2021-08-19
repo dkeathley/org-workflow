@@ -94,19 +94,31 @@ With prefix arg move subtree to the start of its parent."
 (defun org-workflow-new-project ()
   "Fill out a new subtree item with default categories."
   (interactive)
-  (let (title)
+  (let (title item-id project-folder-name proj-type folder-title)
 	
 	;;Get title string from user
-	(setq title (read-string "Enter Title: "))
+	(setq title (read-string "Title: "))
+	(setq folder-title (read-string "Folder Title: "))
 
-	;;Insert subheadings
-	(org-end-of-line) ;;ensure at the end of the line
-	(org-insert-subheading nil)
+	;;Insert the title
+	(org-insert-heading-after-current)
 	(insert title)
+	(org-demote-subtree)
 
 	;;Create an id for the project
 	(setq item-id (org-id-get-create))
-	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
+	(setq proj-type (org-entry-get nil "PROJ-TYPE" t))
+
+	;;Build the name for the project folder
+	(setq project-folder-name
+		  (concat "PROJECT-ATTACHMENTS/"
+				  (file-name-base (buffer-name))
+				  "/"
+				  proj-type "-"
+				  folder-title
+				  (format-time-string "-%Y-%m-%d-%H-%M")
+				  )
+		  )
 
 	;;Set the attachment directory based on the ID
 	(org-set-property "DIR" project-folder-name)
@@ -127,20 +139,32 @@ With prefix arg move subtree to the start of its parent."
   "Creates title from user input for a custom template. It is assumed
    that the user provides a list of subtitles in subtitle-list"
   (interactive)
-  (let (item-num title)
+  (let (item-num title project-folder-name item-id folder-title proj-type)
 
 	;;Get title string from user
-	(setq title (read-string "Enter Title: "))
+	(setq title (read-string "Title: "))
+	(setq folder-title (read-string "Folder Title: "))
 
 	;;Insert the title
-	(org-end-of-line) ;;Ensure end of line
-	(org-insert-subheading nil)
+	(org-insert-heading-after-current)
 	(insert title)
+	(org-demote-subtree)
 
 	;;Create an id for the project
 	(setq item-id (org-id-get-create))
-	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
+	(setq proj-type (org-entry-get nil "PROJ-TYPE" t))
 
+	;;Build the name for the project folder
+	(setq project-folder-name
+		  (concat "PROJECT-ATTACHMENTS/"
+				  (file-name-base (buffer-name))
+				  "/"
+				  proj-type "-"
+				  folder-title
+				  (format-time-string "-%Y-%m-%d-%H-%M")
+				  )
+		  )
+	
 	;;Set the attachment directory based on the ID
 	(org-set-property "DIR" project-folder-name)
 
