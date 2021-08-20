@@ -245,8 +245,6 @@
 				  )
 		  )
 	
-	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
-
 	;;Set the attachment directory based on the ID
 	(org-set-property "DIR" project-folder-name)
 
