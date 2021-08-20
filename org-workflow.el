@@ -27,8 +27,7 @@
 (require 'org)
 
 (defun org-workflow-move-subtree-to-bottom ()
-  "Move current org subtree to the end of its parent.
-With prefix arg move subtree to the start of its parent."
+  "Move current org subtree to the end of its parent."
   (interactive)
   (condition-case err
       (while t
@@ -46,8 +45,8 @@ With prefix arg move subtree to the start of its parent."
 
 
 (defun org-workflow-move-subtree-to-top ()
-  "Move current org subtree to the end of its parent.
-With prefix arg move subtree to the start of its parent."
+  "Move current org subtree to the top of its parent."
+
   (interactive)
   (condition-case err
       (while t
