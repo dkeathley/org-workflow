@@ -69,10 +69,9 @@ This macro takes the input (subtitle-list) as a list of strings and uses these s
 
 Other than having these modified subheading strings, all else is identical to =org-workflow-new-project=.
 
-
 * An example org-workflow setup
 
-It is easy to modify your =init.el= or =.emacs= file to provide helpful keybindings to the macros provided by =org-workflow=.
+It is easy to modify your =init.el= or =.emacs= init file to provide helpful keybindings to the macros provided by =org-workflow=.
 
 The code below provides an example of a custom setup, including a custom project template and associated keybindings.  You can use this to modify and extend your own personal setup.
 
@@ -105,6 +104,43 @@ The code below provides an example of a custom setup, including a custom project
 (define-key org-mode-map (kbd "C-c w c") 'my-conference-template)
 
 #+end_src   
+
+* org-workflow in action
+
+** Creating a New Project
+
+[[file:gifs/creating-project.gif]]
+
+** Drag and Drop Attachments
+
+This example uses org-download to achieve dragging and dropping of files as attachments into projects.
+
+The settings in the =.emacs= init file for org-download were as follows.
+
+#+begin_src emacs-lisp
+
+;;Setup org-download for drag-n-drop images into org files
+(use-package org-download
+  :ensure t
+  :defer t
+  :init
+  ;; Add handlers for drag-and-drop when Org is loaded.
+  (with-eval-after-load 'org
+    (org-download-enable)))
+(setq org-download-method 'attach)
+(setq org-attach-use-inheritance t)
+
+#+end_src
+
+[[file:gifs/drag-n-drop-attachment.gif]]
+
+** Moving a Subrtree To the Top/Bottom of the List
+
+[[file:gifs/move-subtree-to-top-or-bottom.gif]]
+
+** Moving a Project From one Stage to Another
+
+[[file:gifs/moving-between-stages.gif]]
 
 
 
