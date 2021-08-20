@@ -221,10 +221,30 @@
   
   (interactive)
 
-  (let (item-id project-folder-name)
+  (let (item-id project-folder-name proj-type folder-title)
 
 	;;Create an id for the project
 	(setq item-id (org-id-get-create))
+	(setq proj-type (org-entry-get nil "PROJ-TYPE" t))
+
+	;;Get the folder title string. This is the core name of the
+	;;attachment folder that is specified for the project.
+	(setq folder-title (read-string "Folder Title: "))
+
+	;;Build the name for the project folder.  It looks for PROJ-TYPE
+	;;property that is inherited by parents.  If specified it prepends
+	;;the name with that, followed by the folder name, then followed by a date
+	;;stamp.  The date stamp is to help the user differentiate duplicates.
+	(setq project-folder-name
+		  (concat "PROJECT-ATTACHMENTS/"
+				  (file-name-base (buffer-name))
+				  "/"
+				  proj-type "-"
+				  folder-title
+				  (format-time-string "-%Y-%m-%d-%H-%M")
+				  )
+		  )
+	
 	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
 
 	;;Set the attachment directory based on the ID
