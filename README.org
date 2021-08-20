@@ -113,7 +113,7 @@ The code below provides an example of a custom setup, including a custom project
 
 ** Drag and Drop Attachments
 
-This example uses org-download to achieve dragging and dropping of files as attachments into projects.
+This example uses [[https://github.com/abo-abo/org-download][org-download]] to achieve dragging and dropping of files as attachments into projects.
 
 The settings in the =.emacs= init file for org-download were as follows.
 
