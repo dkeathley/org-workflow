@@ -125,9 +125,12 @@ With prefix arg move subtree to the start of its parent."
 
 (defun org-workflow-template-builder (subtitle-list)
   "Creates title from user input for a custom template. It is assumed
-   that the user provides a list of subtitles in subtitle-list"
+   that the user provides a list of subtitles in subtitle-list.  The :ID:
+   and :DIR: properties are also set in order to best use org-attach and
+   org-download with projects. "
+  
   (interactive)
-  (let (item-num title)
+  (let (item-num title project-folder-name item-id)
 
 	;;Get title string from user
 	(setq title (read-string "Enter Title: "))
@@ -174,6 +177,24 @@ With prefix arg move subtree to the start of its parent."
 	)
   )
 
+(defun org-workflow-convert-to-project ()
+  "Ensures that the :ID: and :DIR: properties are set to be consistent
+   with automatically-generated project headlines.  "
+  
+  (interactive)
+
+  (let (item-id project-folder-name)
+
+	;;Create an id for the project
+	(setq item-id (org-id-get-create))
+	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
+
+	;;Set the attachment directory based on the ID
+	(org-set-property "DIR" project-folder-name)
+
+	)
+
+  )
 
 (provide 'org-workflow)
 
