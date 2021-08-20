@@ -1,0 +1,23 @@
+* Notes
+** Usage .gif files
+
+Thinking through what steps would be useful to demo:
+
+ 1. Move project up to stage one level up/down
+ 2. Move project to top/bottom of the current list of projects
+ 3. Create a new project
+ 4. Attaching files
+    1. Demonstrate naming conventions
+    2. Demonstrate usage of =PROJ-TYPE= property
+
+
+* Tasks
+
+** TODO Create .gif files providing usage instructions for org-workflow.
+
+** TODO Provide a way to rename the attachment folder
+
+Currently it assumes the attachment folder is permanently named after initial generation.  This might not always be preferred.  For instance, if you want to move it around to another workflow.
+
+Could add a convenience function that rejects the current =PROJ-TYPE= property and uses that to rename any existing project folder if it already exists as well as the =DIR= property of the current project at point.  
+

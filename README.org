@@ -1,0 +1,147 @@
+* Description
+
+This elisp script provides a series of macros that are helpful for managing workflows in Emacs org-mode.  A common use case in org-mode is to create a series of headings that represent steps in a process, what we call a "workflow".  For instance, for writing journal articles there might be the following stages:
+
+ 1. Idea
+ 2. Outline
+ 3. Draft
+ 4. Internal Review
+ 5. External Review
+ 6. Accepted
+ 7. Rejected/Recycling
+
+These make useful parent headings.  Under these would be headings for manuscript projects.  Each manuscript project would house notes, attachments, tasks, etc under subsequent subheadings.  It is then very helpful to move these projects seamlessly between each stage in the workflow.  However, this is cumbersome in org-mode out of the box, and requires multiple steps.
+
+First of all, to move the heading one either needs to copy and paste the entire project heading, or do a series of maneuvers to get it to the next/previous stage.  
+
+This is where org-workflow comes in.
+
+Org-workflow provides quick macros for moving projects from one stage to the next in a single step.  It also provides macros for bubbling projects up to the top of the list or sinking them to the bottom.
+
+Beyond these convenience macros, there are also macros for generating and setting up new projects in a very consistent way.  Using these built-in macros creates attachment folders and templates in a systematic way that speeds up the creation of  a new project, and allows for an organized way to store external documents in a single folder for each project.  These might include word processing documents, code, data, etc.
+
+* Installation
+
+1. Put the =org-workflow.el= file into a subfolder of your =.emacs.d= directory.  For instance =~/.emacs.d/lisp/org-workflow/org-workflow.el=
+2. Edit your =init.el= or =.emacs= file adding the line =(add-to-list 'load-path "~/.emacs.d/lisp/org-workflow")=
+3. Restart Emacs.  
+
+* Macros
+
+Below we describe each macro provided by org-workflow.
+
+** =org-workflow-move-subtree-to-bottom=
+
+Moves subtree at point to the bottom of the list of subtrees at the same level under a parent heading.
+
+** =org-workflow-move-subtree-to-top=
+
+Same as =org-workflow-move-subtree-to-bottom= but for moving the subtree at point to the top.
+
+** =org-workflow-move-level-up=
+
+This moves the current project at point up one level to the previous stage in a workflow.
+
+** =org-workflow-move-level-down=
+
+Same as =org-workflow-move-level-up= but for moving the project down one level to the next stage.
+
+** =org-workflow-new-project=
+
+Generates a project under the workflow stage at point.
+
+This macro does the following:
+
+1. Calls the user to enter a title string.  This string is used to title the project heading.
+2. Calls the user to enter a folder title.  This title is used as a short title for the project attachment folder.
+3. It then creates the project heading with the following properties:
+   - =:ID: RANDOMLY-GENERATED-ID-NO=
+   - =:DIR: PROJECT-ATTACHMENTS/BUFFER-NAME/PROJ-TYPE-FOLDER-TITLE-YYYY-MM-DD-HH-MM=
+     - Note the =PROJ-TYPE= string comes from this property from any parent heading above the project.
+     - If no parent heading has a defined =PROJ-TYPE= property, then this is simply left blank.
+4. Generates default subheadings
+   - Notebook
+   - Tasks
+
+** =org-workflow-template-builder (subtitle-list)=
+
+This macro takes the input (subtitle-list) as a list of strings and uses these strings to create default subheadings for a new project.
+
+Other than having these modified subheading strings, all else is identical to =org-workflow-new-project=.
+
+* An example org-workflow setup
+
+It is easy to modify your =init.el= or =.emacs= init file to provide helpful keybindings to the macros provided by =org-workflow=.
+
+The code below provides an example of a custom setup, including a custom project template and associated keybindings.  You can use this to modify and extend your own personal setup.
+
+#+begin_src emacs-lisp
+
+;;Load the org-workflow package
+(require 'org-workflow)
+(define-key org-mode-map (kbd "C-c M-<down>") 'org-workflow-move-subtree-to-bottom)
+(define-key org-mode-map (kbd "C-c M-<up>") 'org-workflow-move-subtree-to-top)
+(define-key org-mode-map (kbd "M-S-<up>") 'org-workflow-move-level-up)
+(define-key org-mode-map (kbd "M-S-<down>") 'org-workflow-move-level-down)
+(define-key org-mode-map (kbd "C-c C-<return>") 'org-workflow-new-project)
+
+;; Conference project template:
+(setq conference-project-subtitle-list
+	  '("Title:"
+		"Abstract"
+		"Conference Dates:"
+		"Talk Date:"
+		"Talk Time:"
+		"Duration:"
+		"Notebook"
+		"Tasks"
+		)
+	  )
+(defun my-conference-template ()
+  (interactive)
+  (org-workflow-template-builder conference-project-subtitle-list)
+  )
+(define-key org-mode-map (kbd "C-c w c") 'my-conference-template)
+
+#+end_src   
+
+* org-workflow in action
+
+** Creating a New Project
+
+[[file:gifs/creating-project.gif]]
+
+** Drag and Drop Attachments
+
+This example uses [[https://github.com/abo-abo/org-download][org-download]] to achieve dragging and dropping of files as attachments into projects.
+
+The settings in the =.emacs= init file for org-download were as follows.
+
+#+begin_src emacs-lisp
+
+;;Setup org-download for drag-n-drop images into org files
+(use-package org-download
+  :ensure t
+  :defer t
+  :init
+  ;; Add handlers for drag-and-drop when Org is loaded.
+  (with-eval-after-load 'org
+    (org-download-enable)))
+(setq org-download-method 'attach)
+(setq org-attach-use-inheritance t)
+
+#+end_src
+
+[[file:gifs/drag-n-drop-attachment.gif]]
+
+** Moving a Subrtree To the Top/Bottom of the List
+
+[[file:gifs/move-subtree-to-top-or-bottom.gif]]
+
+** Moving a Project From one Stage to Another
+
+[[file:gifs/moving-between-stages.gif]]
+
+
+
+

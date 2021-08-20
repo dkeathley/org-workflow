@@ -1,5 +1,6 @@
 ;;; org-workflow.el --- Provides extra functionality for
-;;; managing workflows in org-mode
+;;; managing workflows and projects in org-mode.  It works with the
+;;; org-attach and org-id systems already in place.  
 
 ;; Copyright (C) 2021 Phillip D. Keathley
 ;; Authors: P. Donald Keathley <dkeathley@gmail.com>
@@ -92,31 +93,50 @@ With prefix arg move subtree to the start of its parent."
   )
 
 (defun org-workflow-new-project ()
-  "Fill out a new subtree item with default categories."
+  "Fill out a new subtree item with default subtree items of NOTEBOOK and TASKS."
   (interactive)
-  (let (title)
+  (let (title item-id project-folder-name proj-type folder-title)
 	
 	;;Get title string from user
-	(setq title (read-string "Enter Title: "))
+	(setq title (read-string "Title: "))
 
-	;;Insert subheadings
-	(org-end-of-line) ;;ensure at the end of the line
-	(org-insert-subheading nil)
+	;;Get the folder title string. This is the core name of the
+	;;attachment folder that is specified for the project.
+	(setq folder-title (read-string "Folder Title: "))
+
+	;;Insert the title heading under the current heading at point.
+	(org-insert-heading-after-current)
 	(insert title)
+	(org-demote-subtree)
 
 	;;Create an id for the project
 	(setq item-id (org-id-get-create))
-	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
+	(setq proj-type (org-entry-get nil "PROJ-TYPE" t))
+
+	;;Build the name for the project folder.  It looks for PROJ-TYPE
+	;;property that is inherited by parents.  If specified it prepends
+	;;the name with that, followed by the folder name, then followed by a date
+	;;stamp.  The date stamp is to help the user differentiate duplicates.
+	(setq project-folder-name
+		  (concat "PROJECT-ATTACHMENTS/"
+				  (file-name-base (buffer-name))
+				  "/"
+				  proj-type "-"
+				  folder-title
+				  (format-time-string "-%Y-%m-%d-%H-%M")
+				  )
+		  )
 
 	;;Set the attachment directory based on the ID
 	(org-set-property "DIR" project-folder-name)
 
 	;;Move point to end of the properties drawer
 	(search-forward-regexp ":END:")
-	
+
+	;;Now insert the subtree headings
 	(org-insert-subheading nil)
 	(insert "Notebook")
-
+	
 	(org-insert-heading nil)
 	(insert "Tasks")
 	
@@ -125,26 +145,45 @@ With prefix arg move subtree to the start of its parent."
 
 (defun org-workflow-template-builder (subtitle-list)
   "Creates title from user input for a custom template. It is assumed
-   that the user provides a list of subtitles in subtitle-list.  The :ID:
-   and :DIR: properties are also set in order to best use org-attach and
-   org-download with projects. "
-  
+   that the user provides a list of subtitles in subtitle-list.  These
+   are then used as the subheading titles under the project by default."
+
   (interactive)
-  (let (item-num title project-folder-name item-id)
+  (let (item-num title project-folder-name item-id folder-title proj-type)
 
 	;;Get title string from user
-	(setq title (read-string "Enter Title: "))
+	(setq title (read-string "Title: "))
+
+	;;Get the folder title string. This is the core name of the
+	;;attachment folder that is specified for the project.
+	(setq folder-title (read-string "Folder Title: "))
 
 	;;Insert the title
-	(org-end-of-line) ;;Ensure end of line
-	(org-insert-subheading nil)
+	(org-insert-heading-after-current)
 	(insert title)
+	(org-demote-subtree)
 
 	;;Create an id for the project
 	(setq item-id (org-id-get-create))
-	(setq project-folder-name (concat "PROJECT-ATTACHMENTS/" item-id))
+	(setq proj-type (org-entry-get nil "PROJ-TYPE" t))
 
-	;;Set the attachment directory based on the ID
+
+	;;Build the name for the project folder.  It looks for PROJ-TYPE
+	;;property that is inherited by parents.  If specified it prepends
+	;;the name with that, followed by the folder name, then followed by a date
+	;;stamp.  The date stamp is to help the user differentiate duplicates.
+	(setq project-folder-name
+		  (concat "PROJECT-ATTACHMENTS/"
+				  (file-name-base (buffer-name))
+				  "/"
+				  proj-type "-"
+				  folder-title
+				  (format-time-string "-%Y-%m-%d-%H-%M")
+				  )
+		  )
+	
+	;;Set the attachment directory property that will be inerited
+	;;down to any further generated sub-items.
 	(org-set-property "DIR" project-folder-name)
 
 	;;Move point to end of the properties drawer
