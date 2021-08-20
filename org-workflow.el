@@ -63,7 +63,7 @@
   )
 
 (defun org-workflow-move-level-up ()
-  "Move a subtree up one level in a workflow."
+  "Move a subtree up one level to the previous stage in a workflow."
   (interactive)
   ;;Only move up/down IF you are deeper than a level 1 headline
   (unless (= (org-current-level) 1)
@@ -78,7 +78,7 @@
 
 
 (defun org-workflow-move-level-down ()
-  "Move a subtree down one level in a workflow."
+  "Move a subtree down one level to the next stage in a workflow."
   (interactive)
     ;;Only move up/down IF you are deeper than a level 1 headline
   (unless (= (org-current-level) 1)
