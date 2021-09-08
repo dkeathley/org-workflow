@@ -33,7 +33,9 @@ I think this is the most conservative approach, and would not risk losing any da
 
 The bottom line is that this is supposed to warn the user that there is potentially an issue and they can dig down the details of edge cases and correct them during the session.
 
-This should be done during the conversion of a headline to a project.  A standalone function should also be made to rename a directory if that is all the user wants to do.  
+This should be done during the conversion of a headline to a project.  A standalone function should also be made to rename a directory if that is all the user wants to do.
+
+Essentially -- there will be one function for converting to a project, and then an overloaded function that is called "rename-directory" or "reconfigure-project" that would essentially do the same thing, but just have a different name for user convenience. I think this is the best way to go here!
 
 ** DONE Create .gif files providing usage instructions for org-workflow.
 CLOSED: [2021-09-08 Wed 07:48]
