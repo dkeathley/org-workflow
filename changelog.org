@@ -9,15 +9,34 @@ Thinking through what steps would be useful to demo:
  4. Attaching files
     1. Demonstrate naming conventions
     2. Demonstrate usage of =PROJ-TYPE= property
-
-
+       
 * Tasks
-
-** TODO Create .gif files providing usage instructions for org-workflow.
 
 ** TODO Provide a way to rename the attachment folder
 
 Currently it assumes the attachment folder is permanently named after initial generation.  This might not always be preferred.  For instance, if you want to move it around to another workflow.
 
-Could add a convenience function that rejects the current =PROJ-TYPE= property and uses that to rename any existing project folder if it already exists as well as the =DIR= property of the current project at point.  
+Could add a convenience function that rejects the current =PROJ-TYPE= property and uses that to rename any existing project folder if it already exists as well as the =DIR= property of the current project at point.
+
+If the =DIR= property has not been set yet, then you would simply tell the user that and request that they use =org-workflow-convert-to-project=.  If there is no =DIR= then either it has never been made into a proper project, or some error occurred.
+
+Note that existing infrastructure seems to exist for this inside of org-attach.  It is tempting to just let that handle this as an option.  Will have to see how it works.
+
+In the end, I think we would want to do this ourselves.  The flow should be as follows:
+
+ 1. There is no local directory set.  This is easy -- just set it with a new one!
+ 2. There is a local directory property set. Now we want to flash a warning to the user telling them that there is one set, and providing the location.  The user should then answer Y or N to whether they want to move that existing directory to a new one that they will define.
+    1. Y: Move the directory to newly defined one
+    2. N: Set the new directory leaving the old one in place
+
+I think this is the most conservative approach, and would not risk losing any data on the users part.  So long as the messages infrastructure is used, it will also have a log during the session of what was done so the user could trace it back.
+
+The bottom line is that this is supposed to warn the user that there is potentially an issue and they can dig down the details of edge cases and correct them during the session.
+
+This should be done during the conversion of a headline to a project.  A standalone function should also be made to rename a directory if that is all the user wants to do.  
+
+** DONE Create .gif files providing usage instructions for org-workflow.
+CLOSED: [2021-09-08 Wed 07:48]
+
+I might consider making new ones that are a bit improved, but the ones there now are pretty good.  
 

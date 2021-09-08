@@ -244,13 +244,15 @@
 				  (format-time-string "-%Y-%m-%d-%H-%M")
 				  )
 		  )
-	
+
 	;;Set the attachment directory based on the ID
 	(org-set-property "DIR" project-folder-name)
 
 	)
 
   )
+
+
 
 (provide 'org-workflow)
 
