@@ -1,4 +1,4 @@
-* Notes
+* Changes and Notes
 ** Usage .gif files
 
 Thinking through what steps would be useful to demo:
@@ -9,10 +9,20 @@ Thinking through what steps would be useful to demo:
  4. Attaching files
     1. Demonstrate naming conventions
     2. Demonstrate usage of =PROJ-TYPE= property
-       
+** 210910 -- Updated change directory/convert-to-project commands
+
+Today I finished implementing the updating of the convert-to-project command, and added a convenience function that also calls this command for renaming the project directory (essentially the same action).
+
+What this does is to rename the directory property DIR to a new user specified name (for instance if the user does not like the current name for some reason or it adds confusion).
+
+Beyond this, it also lets the user choose whether or not to move the existing directory on disk to the newly named directory.  This is very helpful as it preserves links that are existing.
+
+I really don't know when a person would not want to do this.  I'm leaving it as a prompt for now, but perhaps it should just default to moving the directory on disk whenever the directory property is changed... Will have to just use it for a while and see what I feel like after some experience.  
+
 * Tasks
 
-** TODO Provide a way to rename the attachment folder
+** DONE Provide a way to rename the attachment folder
+CLOSED: [2021-09-10 Fri 14:38]
 
 Currently it assumes the attachment folder is permanently named after initial generation.  This might not always be preferred.  For instance, if you want to move it around to another workflow.
 
