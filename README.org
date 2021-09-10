@@ -69,6 +69,18 @@ This macro takes the input (subtitle-list) as a list of strings and uses these s
 
 Other than having these modified subheading strings, all else is identical to =org-workflow-new-project=.
 
+** =org-workflow-convert-to-project=
+
+This macro converts an existing headline to a project.  It detects the PROJ-TYPE property for directory naming just the same as the =org-workflow-new-project= function does.
+
+It detects whether the DIR property already exists and prompts the user for what to do about it.  Options are to cancel renaming the current directory (that is to cancel the operation), or to rename the current directory in the org-file and on the disk, or just in the org file (not renaming the current directory on the disk).
+
+The latter option (nor renaming on the disk) is likely a rare scenario as it would break any existing attachment links within the subtree.
+
+** =org-workflow-rename-project-directory=
+
+This is a macro that essentially just calls =org-workflow-convert-to-project=.  It is named differently for convenience, but does the same operation.  
+
 * An example org-workflow setup
 
 It is easy to modify your =init.el= or =.emacs= init file to provide helpful keybindings to the macros provided by =org-workflow=.
