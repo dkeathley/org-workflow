@@ -221,38 +221,167 @@
   
   (interactive)
 
-  (let (item-id project-folder-name proj-type folder-title)
-
+  (let (item-id
+		project-folder-name
+		proj-type
+		folder-title
+		current-dir
+		want-cancel
+		want-move
+		)
+	
 	;;Create an id for the project
 	(setq item-id (org-id-get-create))
 	(setq proj-type (org-entry-get nil "PROJ-TYPE" t))
 
-	;;Get the folder title string. This is the core name of the
-	;;attachment folder that is specified for the project.
-	(setq folder-title (read-string "Folder Title: "))
+	;;These are the want-XX flags.
+	;; -- Default to false in general.
+	(setq want-cancel nil)
+	(setq want-move nil)
+	
+	;;Let's get the current directory at point
+	(setq current-dir (org-entry-get (point) "DIR"))
+	(when current-dir
+		;;What we want to do is warn the user and ask if they want
+		;;to overwrite the current directory
+		
+	  (let (yn-response go-again warning-message)
+		(setq go-again t)
+		
+		(setq warning-message
+			  (concat "Warning, this node has a directory.\nIf you rename without moving the existing one, links will be broken! \n"
+					  "Current DIR: "
+					  current-dir
+					  "\nDo you want move it to a renamed directory, or cancel this operation? [Y]es/[N]o/[C]ancel: "
+					  )
+			  )
 
-	;;Build the name for the project folder.  It looks for PROJ-TYPE
-	;;property that is inherited by parents.  If specified it prepends
-	;;the name with that, followed by the folder name, then followed by a date
-	;;stamp.  The date stamp is to help the user differentiate duplicates.
-	(setq project-folder-name
-		  (concat "PROJECT-ATTACHMENTS/"
-				  (file-name-base (buffer-name))
-				  "/"
-				  proj-type "-"
-				  folder-title
-				  (format-time-string "-%Y-%m-%d-%H-%M")
+		;;Setup a loop until the user presses one of the
+		;;accepted entries Y/y, N/n, or C/c
+		(while go-again
+
+		  ;;Get the entry from the user, displaying the appropriate
+		  ;;warning message about each choice
+		  (setq yn-response
+				(read-string warning-message)
+				)
+
+		  ;;Check the state of the user response
+		  (if (or (string-equal yn-response "C") (string-equal yn-response "c"))
+
+			  ;;First case -- if cancel pushed you want to break the loop and do nothing.
+			  ;; -- Do not rename the directory.
+			  ;; -- Don't change anything in the file.
+			  ;;User decides to cancel -- escape
+			  (progn
+				;;Cancel response
+				(setq go-again nil) ;;Ensure go-again is nil to terminate loop
+				(message "Operation cancelled.  Nothing changed.")
+				(setq want-cancel t)
+				)
+			
+			;; OK -- not cancel, so let's move forward and check if Y/y or N/n.
+			;; We will need to set the want-XX flags accordingly depending on the response.
+			(progn
+			  
+			  
+			  ;;Now check if the user pressed Y or N for moving the existing directory:
+			  (when (or (string-equal yn-response "Y") (string-equal yn-response "y"))
+				  
+				;;Response: Yes.  Move/rename the directory on disk if it exists.
+				;; -- Be sure to want-move to true
+					(setq go-again nil) ;;Ensure go-again is nil to terminate loop
+					(setq want-move t)  ;;User wants to move directory on disk (if it exists)
+				  
+					)
+			  
+			  (when (or (string-equal yn-response "N") (string-equal yn-response "n"))
+				  
+				;;Response: No.
+				;; -- Do nothing from here.  Just leave the dangling directory (if it exists)
+				;; -- Let the user know that any existing links will be broken!
+				(setq go-again nil) ;;Ensure go-again is nil to terminate loop
+				(message (concat
+						  "WARNING: You are choosing to not move the current directory."
+						  "\nIf current attachments exist, their links will be broken!"
+						  )
+						 )
+				)
+			  
+			  )
+			)
+
+		  ;;Now, if go-again has not been set to nil, we know the user did not
+		  ;;enter one of the accepted responses.  We need to warn again and go back to start.
+		  (when go-again
+			(setq warning-message
+				  (concat "Enter only Y/N/C.\n"
+						  "Warning, this node has a directory.\nIf you rename without moving the existing one, links will be broken! \n"
+						  "Current DIR: "
+						  current-dir
+						  "\nDo you want move it to a renamed directory, or cancel this operation? [Y]es/[N]o/[C]ancel: "
+						  )
 				  )
+			)
+
+		  
+
 		  )
+		)
+	  )
+	  
+	;;Now that we are sure what the user wants -- let's move forward with all actions.
+	;; -- All want-XX flags should be set appropriately.
+	;; -- We just need to run through with all of the actions needed.
 
-	;;Set the attachment directory based on the ID
-	(org-set-property "DIR" project-folder-name)
+	;;Unless the users want to cancel, move forward:
+	(unless want-cancel
+	
+	  ;;Get the folder title string. This is the core name of the
+	  ;;attachment folder that is specified for the project.
+	  (setq folder-title (read-string "Folder Title: "))
 
+	  ;;Build the name for the project folder.  It looks for PROJ-TYPE
+	  ;;property that is inherited by parents.  If specified it prepends
+	  ;;the name with that, followed by the folder name, then followed by a date
+	  ;;stamp.  The date stamp is to help the user differentiate duplicates.
+	  (setq project-folder-name
+			(concat "PROJECT-ATTACHMENTS/"
+					(file-name-base (buffer-name))
+					"/"
+					proj-type "-"
+					folder-title
+					(format-time-string "-%Y-%m-%d-%H-%M")
+					)
+			)
+
+	  
+	  ;;Set the attachment directory based on the ID
+	  (org-set-property "DIR" project-folder-name)
+
+	  ;;When the users want to move the directory -- do it!
+	  (when want-move
+		;;Check if directory exists... if so then rename it.
+		(when (file-exists-p current-dir)
+		  (rename-file current-dir project-folder-name)
+		  
+		  )
+		)
+	  )
 	)
-
   )
 
 
+(defun org-workflow-rename-project-directory ()
+  "This is actually an overloaded function call to org-workflow-convert-to-project.
+   It is provided for convenience."
+
+  (interactive)
+  
+  (org-workflow-convert-to-project)
+
+  )
+  
 
 (provide 'org-workflow)
 
