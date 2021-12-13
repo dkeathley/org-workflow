@@ -40,6 +40,12 @@ Org-workflow provides quick macros for moving projects from one stage to the nex
 
 For a better illustration of how you can use =org-workflow= for your own project management needs, see the examples below showing =org-workflow= in action.  
 
+* Installation
+
+1. Put the =org-workflow.el= file into a subfolder of your =.emacs.d= directory.  For instance =~/.emacs.d/lisp/org-workflow/org-workflow.el=
+2. Edit your =init.el= or =.emacs= file adding the line =(add-to-list 'load-path "~/.emacs.d/lisp/org-workflow")=
+3. Restart Emacs.  
+
 * An example org-workflow setup
 
 It is easy to modify your =init.el= or =.emacs= init file to provide helpful keybindings to the macros provided by =org-workflow=.
@@ -75,12 +81,6 @@ The code below provides an example of a custom setup, including a custom project
 (define-key org-mode-map (kbd "C-c w c") 'my-conference-template)
 
 #+end_src   
-
-* Installation
-
-1. Put the =org-workflow.el= file into a subfolder of your =.emacs.d= directory.  For instance =~/.emacs.d/lisp/org-workflow/org-workflow.el=
-2. Edit your =init.el= or =.emacs= file adding the line =(add-to-list 'load-path "~/.emacs.d/lisp/org-workflow")=
-3. Restart Emacs.  
 
 * Macros
 
