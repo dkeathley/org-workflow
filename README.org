@@ -77,9 +77,11 @@ It detects whether the DIR property already exists and prompts the user for what
 
 The latter option (nor renaming on the disk) is likely a rare scenario as it would break any existing attachment links within the subtree.
 
-** =org-workflow-rename-project-directory=
+** =org-workflow-change-project-directory=
 
-This is a macro that essentially just calls =org-workflow-convert-to-project=.  It is named differently for convenience, but does the same operation.  
+This is a macro that essentially just calls =org-workflow-convert-to-project=.  It is named differently for convenience, but does the same operations since if the project exists, it simply keeps its ID and this triggers to change the directory name.
+
+Note, that if the user selects to change the directory name, all contents from the old folder will be moved which will preserve links using =org-attach=.  This should make it very convenient for one to move projects around with ease while preserving all links and directory structure.  
 
 * An example org-workflow setup
 

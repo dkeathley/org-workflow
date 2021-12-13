@@ -9,6 +9,20 @@ Thinking through what steps would be useful to demo:
  4. Attaching files
     1. Demonstrate naming conventions
     2. Demonstrate usage of =PROJ-TYPE= property
+** 210818 -- Org-workflow Project Attachments
+
+210818 Update: Have since found org-attach which is already built into org and does basically everything I was thinking of here :-).  
+
+Think I have the way to do this.   
+
+Can basically have each project have a unique tag.  
+
+Then, when using org-download it can search back to find the level of the project.  
+
+This would work if totally consistent.  However, it might run into issues when someone just adds their own project entry that is not tagged properly.   
+
+Will have to think some more about this.  
+
 ** 210910 -- Updated change directory/convert-to-project commands
 
 Today I finished implementing the updating of the convert-to-project command, and added a convenience function that also calls this command for renaming the project directory (essentially the same action).
@@ -18,6 +32,13 @@ What this does is to rename the directory property DIR to a new user specified n
 Beyond this, it also lets the user choose whether or not to move the existing directory on disk to the newly named directory.  This is very helpful as it preserves links that are existing.
 
 I really don't know when a person would not want to do this.  I'm leaving it as a prompt for now, but perhaps it should just default to moving the directory on disk whenever the directory property is changed... Will have to just use it for a while and see what I feel like after some experience.  
+
+** 211213 -- Changed macro to =org-workflow-change-project-directory=
+
+This used to be called =org-workflow-rename-project-directory=. I didn't like the warning message as it was too long and complex.  Now it simply notes that the files in the attachment folder will be moved, and prompts the user to proceed or cancel.  If the user cancels, the operation is not performed and the files aren't moved.
+
+This way, the user can manually adjust the file contents if absolutely not desired to move before triggering the command again.  
+
 
 * Tasks
 

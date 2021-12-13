@@ -227,7 +227,6 @@
 		folder-title
 		current-dir
 		want-cancel
-		want-move
 		)
 	
 	;;Create an id for the project
@@ -237,7 +236,6 @@
 	;;These are the want-XX flags.
 	;; -- Default to false in general.
 	(setq want-cancel nil)
-	(setq want-move nil)
 	
 	;;Let's get the current directory at point
 	(setq current-dir (org-entry-get (point) "DIR"))
@@ -249,10 +247,10 @@
 		(setq go-again t)
 		
 		(setq warning-message
-			  (concat "Warning, this node has a directory.\nIf you rename without moving the existing one, links will be broken! \n"
+			  (concat "Note: The existing directory will be moved if you proceed. Is this OK? \n"
 					  "Current DIR: "
 					  current-dir
-					  "\nDo you want move it to a renamed directory, or cancel this operation? [Y]es/[N]o/[C]ancel: "
+					  "\n[Y/y]es/[N/n]o: "
 					  )
 			  )
 
@@ -267,20 +265,20 @@
 				)
 
 		  ;;Check the state of the user response
-		  (if (or (string-equal yn-response "C") (string-equal yn-response "c"))
+		  (if (or (string-equal yn-response "N") (string-equal yn-response "n"))
 
-			  ;;First case -- if cancel pushed you want to break the loop and do nothing.
+			  ;;If no selected you want to break the loop and do nothing.
 			  ;; -- Do not rename the directory.
 			  ;; -- Don't change anything in the file.
 			  ;;User decides to cancel -- escape
 			  (progn
 				;;Cancel response
 				(setq go-again nil) ;;Ensure go-again is nil to terminate loop
-				(message "Operation cancelled.  Nothing changed.")
+				(message "Operation canceled.  Nothing changed.")
 				(setq want-cancel t)
 				)
 			
-			;; OK -- not cancel, so let's move forward and check if Y/y or N/n.
+			;; OK -- not cancel, so let's move forward and check if Y/y.  
 			;; We will need to set the want-XX flags accordingly depending on the response.
 			(progn
 			  
@@ -291,23 +289,9 @@
 				;;Response: Yes.  Move/rename the directory on disk if it exists.
 				;; -- Be sure to want-move to true
 					(setq go-again nil) ;;Ensure go-again is nil to terminate loop
-					(setq want-move t)  ;;User wants to move directory on disk (if it exists)
 				  
 					)
-			  
-			  (when (or (string-equal yn-response "N") (string-equal yn-response "n"))
-				  
-				;;Response: No.
-				;; -- Do nothing from here.  Just leave the dangling directory (if it exists)
-				;; -- Let the user know that any existing links will be broken!
-				(setq go-again nil) ;;Ensure go-again is nil to terminate loop
-				(message (concat
-						  "WARNING: You are choosing to not move the current directory."
-						  "\nIf current attachments exist, their links will be broken!"
-						  )
-						 )
-				)
-			  
+		  
 			  )
 			)
 
@@ -315,11 +299,11 @@
 		  ;;enter one of the accepted responses.  We need to warn again and go back to start.
 		  (when go-again
 			(setq warning-message
-				  (concat "Enter only Y/N/C.\n"
-						  "Warning, this node has a directory.\nIf you rename without moving the existing one, links will be broken! \n"
+				  (concat "Enter only Y/y or N/n.\n"
+						  "Note: The existing directory will be moved if you proceed. Is this OK? \n"
 						  "Current DIR: "
 						  current-dir
-						  "\nDo you want move it to a renamed directory, or cancel this operation? [Y]es/[N]o/[C]ancel: "
+						  "\n[Y/y]es/[N/n]o:"
 						  )
 				  )
 			)
@@ -354,17 +338,14 @@
 					(format-time-string "-%Y-%m-%d-%H-%M")
 					)
 			)
-
 	  
 	  ;;Set the attachment directory based on the ID
 	  (org-set-property "DIR" project-folder-name)
 
-	  ;;When the users want to move the directory -- do it!
-	  (when want-move
-		;;Check if directory exists... if so then rename it.
+	  ;;Check if directory exists... if so then rename it.
+	  (when current-dir
 		(when (file-exists-p current-dir)
 		  (rename-file current-dir project-folder-name)
-		  
 		  )
 		)
 	  )
@@ -372,7 +353,7 @@
   )
 
 
-(defun org-workflow-rename-project-directory ()
+(defun org-workflow-change-project-directory ()
   "This is actually an overloaded function call to org-workflow-convert-to-project.
    It is provided for convenience."
 
