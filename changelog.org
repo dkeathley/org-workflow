@@ -39,8 +39,14 @@ This used to be called =org-workflow-rename-project-directory=. I didn't like th
 
 This way, the user can manually adjust the file contents if absolutely not desired to move before triggering the command again.  
 
+** 211213a -- Improved Readme
 
 * Tasks
+** TODO Improve and add examples to readme
+
+For instance, need to show complete proecess in one take from the creation of the workflow heading, addition of PROJ-TYPE property, etc...
+
+I think a YOUTUBE video might be best for this.  
 
 ** DONE Provide a way to rename the attachment folder
 CLOSED: [2021-09-10 Fri 14:38]

@@ -1,6 +1,10 @@
 * Description
 
-This elisp script provides a series of macros that are helpful for managing workflows in Emacs org-mode.  A common use case in org-mode is to create a series of headings that represent steps in a process, what we call a "workflow".  For instance, for writing journal articles there might be the following stages:
+This elisp script provides a series of macros that are helpful for managing workflows in Emacs org-mode.  When using these macros, it is possible to use org-mode in such a way that it functions like a kanban board where one can move projects between different stages inside a workflow with ease.  When combined with =org-attach= for attachment management, and =org-download= for drag-and-drop functionality, these macros simplify using org-mode for the management of complicated and interconnected projects.  
+
+* Illustrative Use Case: Manuscript Development
+
+A common scenario in project management is to have a group of projects of particular types that move between different pre-defined stages within a workflow.  For example, in an academic group, a common workflow would be manuscript development which would have the following stages.
 
  1. Idea
  2. Outline
@@ -10,15 +14,23 @@ This elisp script provides a series of macros that are helpful for managing work
  6. Accepted
  7. Rejected/Recycling
 
-These make useful parent headings.  Under these would be headings for manuscript projects.  Each manuscript project would house notes, attachments, tasks, etc under subsequent subheadings.  It is then very helpful to move these projects seamlessly between each stage in the workflow.  However, this is cumbersome in org-mode out of the box, and requires multiple steps.
+Each manuscript could be categorized as being inside of one of these stages at any given time, from conception to the time that it is published or archived.  It is then natural if using org-mode to structure a workflow having a parent heading called =Manuscripts=, with each stage being a sub-heading.  Living under these sub-headings would be a sub-sub-heading that would represent each manuscript project.  There you could keep a running set of notes, links to files, etc. that are helpful in keeping organized while working on each manuscript.  It would look like the following structure:
 
-First of all, to move the heading one either needs to copy and paste the entire project heading, or do a series of maneuvers to get it to the next/previous stage.  
+*Manuscripts*
+--> Idea
+-->--> Manuscript A
+-->-->--> Notes and content for Manuscript A
+--> Outline
+-->--> Manuscript B
+...
+--> Rejected/Recycling
+-->--> Manuscript Z
 
-This is where org-workflow comes in.
+The problem with using vanilla org-mode is that moving sub-headings between stages is a bit of a pain.  to move the heading one either needs to copy and paste the entire project heading, or do a series of maneuvers to get it to the next/previous stage.  Furthermore, if one uses =org-attach= to attach documents to each manuscript project, the directory structure is not convenient or organized without a lot of discipline from the user.  This is where =org-workflow= comes in.  
 
-Org-workflow provides quick macros for moving projects from one stage to the next in a single step.  It also provides macros for bubbling projects up to the top of the list or sinking them to the bottom.
+Org-workflow provides quick macros for moving projects from one stage to the next in a single step.  It also provides macros for bubbling projects up to the top of the list or sinking them to the bottom.  Beyond these convenience macros, there are also macros for generating and setting up new projects in a very consistent way.  when creating a project with org-workflow, it is automatically assigned a unique ID and attachment directory having an automated flat naming structure that is human readable when compiled. For instance, by assigning the heading for Manuscripts above with a =:PROJ-TYPE: MANUSCRIPTS= property, org-workflow would then know to provide each manuscript project within the workflow with its own unique attachment directory having the naming convention =PROJECT-ATTACHMENTS/ORG-FILE-NAME/MANUSCRIPTS-XXXX= where =XXXX= is a user-selected filename for the project.  By using =org-workflow=, one can easily move and track projects and their progress, while keeping a dynamic table of contents to all attached files that is all plain text for preservation and with minimal effort from the user.
 
-Beyond these convenience macros, there are also macros for generating and setting up new projects in a very consistent way.  Using these built-in macros creates attachment folders and templates in a systematic way that speeds up the creation of  a new project, and allows for an organized way to store external documents in a single folder for each project.  These might include word processing documents, code, data, etc.
+For a better illustration of how you can use =org-workflow= for your own project management needs, see the examples below showing =org-workflow= in action.  
 
 * Installation
 
@@ -119,8 +131,7 @@ The code below provides an example of a custom setup, including a custom project
 
 #+end_src   
 
-* org-workflow in action
-
+* =org-workflow= in action
 ** Creating a New Project
 
 [[file:gifs/creating-project.gif]]
