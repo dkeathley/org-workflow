@@ -82,6 +82,23 @@ The code below provides an example of a custom setup, including a custom project
 
 #+end_src   
 
+For drag-and-drop attachments, you can use org-download.  Here is an example setup.
+
+#+begin_src emacs-lisp
+
+;;Setup org-download for drag-n-drop images into org files
+(use-package org-download
+  :ensure t
+  :defer t
+  :init
+  ;; Add handlers for drag-and-drop when Org is loaded.
+  (with-eval-after-load 'org
+    (org-download-enable)))
+(setq org-download-method 'attach)
+(setq org-attach-use-inheritance t)
+
+#+end_src
+
 * Macros
 
 Below we describe each macro provided by org-workflow.
