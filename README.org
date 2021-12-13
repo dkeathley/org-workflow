@@ -17,13 +17,21 @@ A common scenario in project management is to have a group of projects of partic
 Each manuscript could be categorized as being inside of one of these stages at any given time, from conception to the time that it is published or archived.  It is then natural if using org-mode to structure a workflow having a parent heading called =Manuscripts=, with each stage being a sub-heading.  Living under these sub-headings would be a sub-sub-heading that would represent each manuscript project.  There you could keep a running set of notes, links to files, etc. that are helpful in keeping organized while working on each manuscript.  It would look like the following structure:
 
 *Manuscripts*
+
 --> Idea
+
 -->--> Manuscript A
+
 -->-->--> Notes and content for Manuscript A
+
 --> Outline
+
 -->--> Manuscript B
+
 ...
+
 --> Rejected/Recycling
+
 -->--> Manuscript Z
 
 The problem with using vanilla org-mode is that moving sub-headings between stages is a bit of a pain.  to move the heading one either needs to copy and paste the entire project heading, or do a series of maneuvers to get it to the next/previous stage.  Furthermore, if one uses =org-attach= to attach documents to each manuscript project, the directory structure is not convenient or organized without a lot of discipline from the user.  This is where =org-workflow= comes in.  
