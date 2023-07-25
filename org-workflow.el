@@ -103,7 +103,7 @@
 
 	;;Get the folder title string. This is the core name of the
 	;;attachment folder that is specified for the project.
-	(setq folder-title (read-string "Folder Title: "))
+	(setq folder-title (read-string "Folder Title: " (replace-regexp-in-string "[\s]" "-" title)))
 
 	;;Insert the title heading under the current heading at point.
 	(org-insert-heading-after-current)
@@ -325,7 +325,14 @@
 	
 	  ;;Get the folder title string. This is the core name of the
 	  ;;attachment folder that is specified for the project.
-	  (setq folder-title (read-string "Folder Title: "))
+
+
+	  ;; Give the default suggestion as the current folder, removing the directory prefix...
+	  (setq dir-prefix (concat "PROJECT-ATTACHMENTS/"
+							   (file-name-base (buffer-name))
+							   "/")
+			)
+	  (setq folder-title (read-string "Folder Title: " (replace-regexp-in-string dir-prefix "" current-dir)))
 
 	  ;;Build the name for the project folder.  It looks for PROJ-TYPE
 	  ;;property that is inherited by parents.  If specified it prepends
