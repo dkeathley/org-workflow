@@ -344,7 +344,6 @@
 					"/"
 					proj-type "-"
 					folder-title
-					(format-time-string "-%Y-%m-%d-%H-%M")
 					)
 			)
 	  
