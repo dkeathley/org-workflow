@@ -327,20 +327,23 @@
 	  ;;attachment folder that is specified for the project.
 
 
-	  ;; Give the default suggestion as the current folder, removing the directory prefix...
-	  (setq dir-prefix (concat "PROJECT-ATTACHMENTS/"
-							   (file-name-base (buffer-name))
-							   "/")
-			)
+
 
 	  ;; If the  current directory exists, then take that name as a starting point:
 	  (when current-dir
+		;; Give the default suggestion as the current folder, removing the directory prefix...
+		(setq dir-prefix (concat "PROJECT-ATTACHMENTS/"
+								 (file-name-base (buffer-name))
+								 "/"
+								 proj-type "-")
+			  )
 		(setq folder-title (read-string "Folder Title: " (replace-regexp-in-string dir-prefix "" current-dir)))
 		)
 
 	  ;; If the current directory does not exist, then we need to generate a new one...
 	  ;; It is generally more efficient to start with the heading title removing all spaces
 	  ;; (org-get-heading 1 1 1 1) does this, removing all unneeded metadata such as tags, comments, etc...
+	  ;; Spaces are then replaced with a dash "-"
 	  (unless current-dir		
 		(setq folder-title (read-string "Folder Title: " (replace-regexp-in-string "[\s]" "-" (org-get-heading 1 1 1 1))))
 		)
