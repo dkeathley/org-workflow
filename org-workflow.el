@@ -103,7 +103,11 @@
 
 	;;Get the folder title string. This is the core name of the
 	;;attachment folder that is specified for the project.
-	(setq folder-title (read-string "Folder Title: " (replace-regexp-in-string "[\s]" "-" title)))
+	(setq suggestion (replace-regexp-in-string "[\s]" "-" title))
+	(setq suggestion (replace-regexp-in-string "--" "-" suggestion))
+	(setq suggestion (replace-regexp-in-string "--" "-" suggestion))
+	(setq suggestion (replace-regexp-in-string "--" "-" suggestion))
+	(setq folder-title (read-string "Folder Title: " suggestion))
 
 	;;Insert the title heading under the current heading at point.
 	(org-insert-heading-after-current)
@@ -344,8 +348,12 @@
 	  ;; It is generally more efficient to start with the heading title removing all spaces
 	  ;; (org-get-heading 1 1 1 1) does this, removing all unneeded metadata such as tags, comments, etc...
 	  ;; Spaces are then replaced with a dash "-"
-	  (unless current-dir		
-		(setq folder-title (read-string "Folder Title: " (replace-regexp-in-string "[\s]" "-" (org-get-heading 1 1 1 1))))
+	  (unless current-dir
+		(setq suggestion (replace-regexp-in-string "[\s]" "-" (org-get-heading 1 1 1 1)))
+		(setq suggestion (replace-regexp-in-string "--" "-" suggestion))
+		(setq suggestion (replace-regexp-in-string "--" "-" suggestion))
+		(setq suggestion (replace-regexp-in-string "--" "-" suggestion))
+		(setq folder-title (read-string "Folder Title: " suggestion))
 		)
 
 	  ;;Build the name for the project folder.  It looks for PROJ-TYPE
