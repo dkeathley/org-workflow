@@ -29,6 +29,9 @@
 (defun org-workflow-move-subtree-to-bottom ()
   "Move current org subtree to the end of its parent."
   (interactive)
+
+  (org-reveal)
+  
   (condition-case err
       (while t
         (funcall 'org-move-subtree-down)
@@ -48,6 +51,9 @@
   "Move current org subtree to the top of its parent."
 
   (interactive)
+  
+  (org-reveal)
+  
   (condition-case err
       (while t
         (funcall 'org-move-subtree-up)
