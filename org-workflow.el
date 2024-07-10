@@ -30,6 +30,8 @@
   "Move current org subtree to the end of its parent."
   (interactive)
 
+  ;;Use org-reveal to expand out all sub-tree headings under the current master heading.
+  ;;This prevents any strange behavior from folded subtrees.
   (org-reveal)
   
   (condition-case err
@@ -51,7 +53,9 @@
   "Move current org subtree to the top of its parent."
 
   (interactive)
-  
+
+  ;;Use org-reveal to expand out all sub-tree headings under the current master heading.
+  ;;This prevents any strange behavior from folded subtrees.
   (org-reveal)
   
   (condition-case err
