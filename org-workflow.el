@@ -80,8 +80,10 @@
 	(progn
 	  (org-workflow-move-subtree-to-bottom)
 	  (org-promote-subtree)
+	  (org-reveal)
 	  (org-move-subtree-up)
 	  (org-demote-subtree)
+	  (org-reveal)
 	  (org-workflow-move-subtree-to-top)
 	  )
 	)
@@ -96,8 +98,10 @@
 	(progn
 	  (org-workflow-move-subtree-to-bottom)
 	  (org-promote-subtree)
+	  (org-reveal)
 	  (org-move-subtree-down)
 	  (org-demote-subtree)
+	  (org-reveal)
 	  (org-workflow-move-subtree-to-top)
 	  )
 	)
